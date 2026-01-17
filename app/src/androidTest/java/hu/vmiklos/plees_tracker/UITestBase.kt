@@ -39,6 +39,11 @@ open class UITestBase {
         assertEquals(textValue, obj.text)
     }
 
+    protected fun findAllObjectsByRes(resourceId: String): List<UiObject2> {
+        device.wait(Until.findObject(By.res(pkg, resourceId)), timeout)
+        return device.findObjects(By.res(pkg, resourceId))
+    }
+
     protected fun resetDatabase() {
         DataModel.database.clearAllTables()
         device.waitForIdle()
