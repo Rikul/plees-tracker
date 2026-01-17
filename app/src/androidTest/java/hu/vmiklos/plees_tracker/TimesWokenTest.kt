@@ -134,6 +134,30 @@ class TimesWokenTest : UITestBase() {
         // Check that the sleep item displays the correct wakes value
         assertResText("sleep_item_wakes", "5")
     }
+
+    @Test
+    fun testTimesWokenIsZeroInDBByDefault() {
+        // Given no sleeps:
+        resetDatabase()
+
+        // Open Add Sleep screen
+        val manualEntry = findObjectByRes("manual_entry_layout")
+        manualEntry.click()
+
+        // Save without setting wakes (should default to 0)
+        val saveButton = findObjectByRes("add_sleep_save")
+        saveButton.click()
+
+        // Verify in DB that wakes is 0 by default
+        device.waitForIdle()
+        var sleep: Sleep?
+        var wakes: Int
+        runBlocking {
+            val sleeps = DataModel.database.sleepDao().getAll()
+            wakes = sleeps[0].wakes
+        }
+        assertEquals(0, wakes)
+    }
 }
 
 /* vim:set shiftwidth=4 softtabstop=4 expandtab: */

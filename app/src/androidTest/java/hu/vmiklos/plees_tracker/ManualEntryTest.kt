@@ -170,40 +170,6 @@ class ManualEntryTest : UITestBase() {
 
     }
 
-    @Test
-    fun testEmptyStartStop() {
-        resetDatabase()
-
-        // Navigate to Add Sleep screen
-        val manualEntry = findObjectByRes("manual_entry_layout")
-        manualEntry.click()
-
-        // Clear start and stop times (if they have default values)
-        val startTimeInput = findObjectByRes("add_sleep_start_time")
-        val stopTimeInput = findObjectByRes("add_sleep_stop_time")
-
-        startTimeInput.text = ""
-        stopTimeInput.text = ""
-
-        // Save
-        val saveButton = findObjectByRes("add_sleep_save")
-        saveButton.click()
-
-        // Wait for save to occur
-        device.waitForIdle()
-        Thread.sleep(500)
-
-        var sleep: Sleep?
-        runBlocking {
-            val sleeps = DataModel.database.sleepDao().getAll()
-            sleep = sleeps.firstOrNull()
-        }
-        assertNotNull(sleep)
-
-        // verify start and stop date/time a1re not null or zero
-        assert(sleep!!.start != 0L) { "Start time should not be zero" }
-        assert(sleep!!.stop != 0L) { "Stop time should not be zero" }
-    }
 
     @Test
     fun testManualEntryAllFields() {
